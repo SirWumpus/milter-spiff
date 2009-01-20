@@ -1,0 +1,238 @@
+CHANGES
+-------
+
+The major number changes for such things as code rewrites, changes in
+syntax, and/or dramatic changes in functionality. The minor number
+changes for corrections, enhancements, etc. made to the code. There
+is no set schedule for releases.
+
+--TODO--
+
+
+--0.15--
+
+   +	Requires LibSnert 1.70
+
+   !	Conversion from Dns API to PDQ API.
+
+   !	Use updated SPF API from libsnert that employs PDQ.
+
+--0.14--
+
+   +	Requires LibSnert 1.65
+
+   +	Added spf-temp-error-dns option that was in the libsnert spf.c
+	API, but forgot to add to the option table of the previous
+	release.
+
+--0.13--
+
+   !	Disabling of blacklisting in the previous release was too
+   	agressive and prevented whitelisting by Connect: tags.
+   	Reported by Benji Spencer.
+
+--0.12--
+
+   +	Requires LibSnert 1.63
+
+   !	See LibSnert change log for related DNS and SPF API fixes.
+
+   +	access-db now supports socket-map, flat-file, and SQLite3
+	lookups in addition to Berkeley DB. The SQLite3 behaviour
+	can be disabled via LibSnert's ./configure script.
+
+   !	Rejection based on access-db blacklisting now disabled. Some
+	users prefer leaving blacklisting upto Sendmail and not the
+	milter. Reported by Derek Balling and others.
+
+--0.11--
+
+  !!	License 1.4 which provides additional details with regards to
+  	possible license controls used, the possibility of "phone
+  	home code" and its general contents, and related privacy
+  	statement.
+
+   +	Add check for filterOpen() got NULL socket address pointer
+	passed to filterOpen() which inidicates an unsupported address
+	type. The connection is simply accepted to bypass the milter.
+
+--0.10--
+
+   +	Requires LibSnert 1.61
+
+  !!	Complete replacement of option specification and no backwards.
+	compatibility. The newer format allows for better integration
+	of previously undocumented libsnert options and for the
+	inclusion of future enhancements.
+
+   !	filterClose(): remove reporting of "null workspace error",
+	which can occur when a client connection is rejected before or
+	by filterOpen().
+
+   !	Minor corrections for gcc -Wall warnings.
+
+--0.9--
+
+   +	Requires LibSnert 1.60
+
+   !	spf.c: Fixed redirect= so that the domain passed to the
+	recusive spfCheck() is an independant copy of the macro
+	buffer. Reported by Mike Elliott.
+
+   !	spf.c: Fixed handling of ptr mechanism to account for multi-
+	homed hosts. Reported by Mike Elliott.
+
+   !	spf.c: Fixed support for dual-cidr-length used for A and MX
+   	mechanisms.
+
+   !	spf.c: If a ptr mechanism fails on the forward DNS lookup,
+	proceed to the next clause instead of giving an error. More
+	fault tolerent of difficult ISPs. Suggested by Mike Elliott.
+
+   +	spf.c: Added spfCheckHeloMailTxt() and -t option for the CLI
+	to specify an initial TXT record to start with instead of
+	looking up the SPF record of the sender. Suggested by Mike
+	Elliott. This can simplify testing.
+
+   +	Added -G option to supply a "best-guess" TXT record in the
+   	event the initial test does not yield a Pass for any reason.
+   	Requested by Mike Elliott.
+
+	"... If you don't get a pass on the spf record, check the best
+	guess record of "v=spf1 a/24 mx/24 ptr", which is command line
+	configurable, and see if you get a pass.  If so, pass, else
+	report previous result.  Make it optional, off by default ..."
+
+   !	spf.c: Falling off the end of the SPF record that does not
+	contain an ``all'' or ``redirect'' clause, failed to set the
+	default result correctly to Neutral. Reported by Mike Elliott.
+
+   !	Reverted back to libmilter's default (7210s) timeout. This
+	should silence many of the reported sendmail to milter timeout
+	errors and/or broken connections caused by the milter timing
+	out sooner than sendmail does with the current SMTP client.
+	The sendmail defaults for each SMTP command and receiving the
+	message content is 1h each and so libmilter allows for 2h 10s.
+	But in theory you could be DoS for between 5 and 104 hours per
+	connection. If you want to change this then set in
+	sendmail.mc:
+
+		define(`confTO_DATABLOCK',      `30m')
+		define(`confTO_COMMAND',        `5m')
+
+--0.8--
+
+   +	Requires LibSnert 1.57
+
+   !	If we are only tagging SPF SoftFail or Fail results, then
+	ignore TempError results and accept the message. The previous
+	behaviour was to reject the message with a 451 response as
+	recommended in SPF Internet Draft 2 section 2.5.6.TempError.
+	The previous behaviour, while permitted by the SPF draft,
+	is too strict, if you choose to only tag messages.
+
+--0.7--
+
+   +	Requires LibSnert 1.56
+
+   !	Changed install.sh.in to create /var/run/mitler/ directory
+   	owned by milter:milter and change the default PID_FILE and
+   	SOCKET_FILE paths. This provides better privelage/security
+   	separation since the milters run as milter:milter.
+
+   !	Removed references to old Socket API, which was never used
+	here. milter-spiff uses the Dns client code from LibSnert,
+	which uses the regular Unix socket API directly.
+
+--0.6--
+
+   +	Requires LibSnert 1.54
+
+   !	If softfail-tag, fail-tag, softfail-discard, or fail-discard
+	are specified and any recipient is white listed, then the
+	message is white listed for all recipients of the message. Its
+	not possible to tag or discard per recipient. Reported by
+	Derek Balling.
+
+   !	spf.c: fix bug in comparison of host name returned from a PTR
+	lookup, where the host name will have a trailing root dot, but
+	the result of spfMacro(), the evaulated <domain-spec>, doesn't
+	and so the test to see if a host name ends with the consulted
+	SPF domain failed. Reported by Derek Balling.
+
+   !	Fix invalid pointer reference when adding Received-SPF caused
+   	when -S is set and not -R.
+
+--0.5--
+
+   +	Requires LibSnert 1.53
+
+  !!	Fix problems concerning multihomed MX records. Reported by
+	Tristan Griffiths.
+
+--0.4--
+
+   +	Requires LibSnert 1.50
+
+  !!	Circular reference bug fixed in spf.c. Reported by Derek
+  	Balling.
+
+   +	Added -R and -S options to disable Received-SPF and X-Scanned-
+	By headers. Requested by Tanel Kokk.
+
+	Also when both options are set, change the libmilter flags to
+	notify sendmail. Can help improve performance when sendmail
+	knows there won't be any header additions.
+
+   !	When fail-tag and softfail-tag settings are both not used,
+	change the libmilter flags to notify sendmail. Can help
+	improve performance when sendmail knows there won't be any
+	header changes.
+
+--0.3--
+
+   +	Requires LibSnert 1.48
+
+   !	Recursion and string compare bugs fixed in spf.c.
+
+   !	Fixed milter-spiff-*: tag lookups in access.db.
+
+   !	More debug code.
+
+   !	An invalid HELO, which is a not FQDN, will probably generate
+	a "DNS name not found" error and so return SPF_TEMP_ERROR.
+	This can happen while many mail clients continue to submit
+	email via port 25, instead of the MSA port 587. Consider
+	a Windows machine where the mail client uses the machine's
+	workgroup name with no Internet domain suffix.
+
+	So when the HELO argument generates an SPF_TEMP_ERROR and
+	the DNS error corresponds to not found or undefined result,
+	then treat the result as SPF_NONE.
+
+   !	When the MAIL FROM:<> is used, don't white list the bounce
+	message, instead use the SPF HELO test result as outlined in
+	Meng Weng Wong's Dec 2004 white paper. This prevents spammers
+	from simply using the DSN address for all their tripe.
+
+   !	Removed redundant xxfi_data() support with respect to RCPT
+   	white listing. Requested by Derek Balling.
+
+--0.2--
+
+   +	Requires LibSnert 1.47
+
+   +	Added support for %{s}, %{l}, %{o}, %{h}, and %{p} macros.
+	Requested by Michael Elliott. The only elements now missing
+	are the "exp=", the %{c}, %{r}, %{t} macros, and upper case
+	URL escape version of the macros.
+
+   !	Changed spf function API to use spfCheckHeloMail() so that
+   	we can expand %{h}.
+
+--0.1--
+
+   +	Requires LibSnert 1.46.
+
+
+
