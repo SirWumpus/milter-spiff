@@ -1,7 +1,7 @@
 /*
  * milter-spiff.c
  *
- * Copyright 2005, 2006 by Anthony Howe. All rights reserved.
+ * Copyright 2005, 2012 by Anthony Howe. All rights reserved.
  *
  * The following should be added to the sendmail.mc file:
  *
@@ -86,8 +86,8 @@
 #include <com/snert/lib/util/getopt.h>
 #include <com/snert/lib/util/setBitWord.h>
 
-#if LIBSNERT_MAJOR < 1 || LIBSNERT_MINOR < 70
-# error "LibSnert/1.70 or better is required"
+#if LIBSNERT_MAJOR < 1 || LIBSNERT_MINOR < 75
+# error "LibSnert 1.75.8 or better is required"
 #endif
 
 #ifdef MILTER_BUILD_STRING

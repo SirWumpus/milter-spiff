@@ -44,44 +44,45 @@ SNERT_LIBDIR	= @rel_libdir@
 
 TARFILE	= ${MILTER}-${VERSION}.tar.gz
 
-CC	= @CC@
-CC_E	= @CC_E@
-CC_O	= @CC_O@
-CFLAGS	= @CFLAGS@
-LDFLAGS	= @LDFLAGS@
-LIBS	= @LIBS@
-TAR_I	= @TAR_I@
+CC		:= @CC@
+CC_E		:= @CC_E@
+CC_O		:= @CC_O@
+TAR_I		:= @TAR_I@
 
-ARCHIVE	= @ARCHIVE@
-COMPILE	= @COMPILE@
-RANLIB	= @RANLIB@
-MD5SUM	= @MD5SUM@
-AUTOCONF= @AUTOCONF@
+ARCHIVE		:= @ARCHIVE@
+COMPILE		:= @COMPILE@
+RANLIB		:= @RANLIB@
+MD5SUM		:= @MD5SUM@
+AUTOCONF	:= @AUTOCONF@
 
-MILTER_BUILD=`cat BUILD_ID.TXT`
+MILTER_BUILD	:= `cat BUILD_ID.TXT`
+
+CFLAGS		:= @CFLAGS@
+LDFLAGS		:= @LDFLAGS@
+LIBS		:= @LIBS@
 
 #######################################################################
 
-.MAIN : build
+.MAIN: build
 
 build : ${MILTER}
 	@echo
 	@echo '***************************************************************'
-	@echo Build `cat BUILD_ID.TXT` DONE
+	@echo Build ${VERSION}.${MILTER_BUILD} DONE
 	@echo '***************************************************************'
 	@echo
 
 clean:
-	-rm -f *.o ${MILTER} *.exe
+	-rm -f *.o ${MILTER} *.exe ${MILTER}.cf
 	@echo
 	@echo '***************************************************************'
 	@echo Clean DONE
 	@echo '***************************************************************'
 	@echo
 
-distclean:
+distclean: clean
 	@echo '---------------------------------------------------------------'
-	-rm -f ${MILTER}.md5 *.o *.obj *.tds *.log *.exe *.core
+	-rm -f ${MILTER} ${MILTER}.md5 *.o *.obj *.tds *.log *.exe *.core
 	-rm -f sample.mc startup.sh install.sh config.h makefile
 	-rm -rf autom4te.cache config.status config.log configure.lineno
 	@echo
@@ -98,7 +99,7 @@ next-id:
 
 ${MILTER}: BUILD_ID.TXT $(SNERT) ${MILTER}.c
 	$(CC) -DMILTER_BUILD=$(MILTER_BUILD) -DMILTER_BUILD_STRING='"'$(MILTER_BUILD)'"' \
-	$(CFLAGS) $(LDFLAGS) -o ${MILTER} ${MILTER}.c $(LIBS)
+	$(CFLAGS) $(LDFLAGS) -D_BUILT="\"`date +'%a, %d %b %Y %H:%M:%S %z'`\"" -o ${MILTER} ${MILTER}.c $(LIBS)
 
 start:
 	./${MILTER}
@@ -110,7 +111,7 @@ restart:
 	-./${MILTER} -restart
 
 install: ${MILTER} install.sh
-	sh install.sh
+	@sh install.sh
 
 install.sh: install.sh.in config.status
 
