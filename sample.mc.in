@@ -8,8 +8,6 @@ dnl
 dnl $OpenBSD$
 dnl
 
-define(`_FFR_MILTER', `1')dnl
-
 dnl -------------------------------------------------------------------
 dnl Enable this for debug output from Sendmail.
 
@@ -18,7 +16,7 @@ dnl define(`confLOG_LEVEL', `14')dnl
 dnl -------------------------------------------------------------------
 dnl Enable this to see even more debug output.
 dnl Defaults to confLOG_LEVEL.
-dnl 
+dnl
 dnl If Milter.LogLevel is greater-than:
 dnl
 dnl	0	Communication errors
@@ -71,6 +69,31 @@ INPUT_MAIL_FILTER(
 	`@PACKAGE_TARNAME@',
 	`S=unix:@snert_socket_file@, T=@snert_milter_t_equate@'
 )dnl
+
+
+dnl
+dnl CORRECT macro definitions that include the default values, plus any
+dnl additional values required by milter-sender or milter-greylist
+dnl
+
+dnl Defaults plus {client_resolve} for milter-sender.
+dnl define(`confMILTER_MACROS_CONNECT', `j, _, {daemon_name},
+dnl  {if_name}, {if_addr}, {client_resolve}')
+
+dnl Defaults plus {verify} for milter-sender, milter-greylist.
+dnl define(`confMILTER_MACROS_HELO', `{tls_version}, {cipher},
+dnl  {cipher_bits}, {cert_subject}, {cert_issuer}, {verify}')
+
+dnl Defaults
+dnl define(`confMILTER_MACROS_ENVFROM', `i, {auth_type}, {auth_authen},
+dnl  {auth_ssf}, {auth_author}, {mail_mailer}, {mail_host}, {mail_addr}')
+
+dnl Defaults plus {greylist} for milter-greylist.
+dnl define(`confMILTER_MACROS_ENVRCPT', `{rcpt_mailer}, {rcpt_host},
+dnl  {rcpt_addr}, {greylist}')
+
+dnl Defaults
+dnl define(`confMILTER_MACROS_EOM', `{msg_id}')
 
 dnl -------------------------------------------------------------------
 dnl End @PACKAGE_TARNAME@.mc

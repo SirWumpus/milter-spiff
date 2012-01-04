@@ -17,6 +17,8 @@ is no set schedule for releases.
 
    !	Use updated SPF API from libsnert that employs PDQ.
 
+   !	sample.mc.in: Removed from define(`_FFR_MILTER', `1')dnl
+
 --0.14--
 
    +	Requires LibSnert 1.65
