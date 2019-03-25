@@ -8,6 +8,13 @@ is no set schedule for releases.
 
 --TODO--
 
+--0.17--
+
+   *	Requires LibSnert 1.75.56
+
+   !	Fix configure and makefile files with respect to recent
+   	changes to LibSnert.
+
 --0.16--
 
    *	Requires LibSnert 1.75.8

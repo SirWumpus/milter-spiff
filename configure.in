@@ -6,7 +6,7 @@
 #	Thus it begins...
 #######################################################################
 
-AC_INIT(milter-spiff, 0.16, [Anthony Howe <achowe@snert.com>])
+AC_INIT(milter-spiff, 0.17, [Anthony Howe <achowe@snert.com>])
 
 dnl The autoconf version I learned to deal with.
 AC_PREREQ(2.59)
@@ -92,7 +92,7 @@ if test -f '../lib/version.sh' ; then
 
 	AC_SUBST(CFLAGS_SQLITE3)
 	AC_SUBST(LDFLAGS_SQLITE3)
-	AC_SUBST(HAVE_LIB_SQLITE3)
+	AC_SUBST(LIBS_SQLITE3)
 
 	AC_SUBST(CFLAGS_PTHREAD)
 	AC_SUBST(LDFLAGS_PTHREAD)
@@ -119,7 +119,7 @@ if test -f '../lib/version.sh' ; then
 
 	CFLAGS="${CFLAGS_MILTER} ${CFLAGS_SQLITE3} ${CFLAGS_DB} ${CFLAGS_PTHREAD} ${CFLAGS}"
 	LDFLAGS="${LDFLAGS_MILTER} ${LDFLAGS_SQLITE3} ${LDFLAGS_DB} ${LDFLAGS_PTHREAD} ${LDFLAGS}"
-	LIBS="${LIBS} ${HAVE_LIB_MILTER} ${HAVE_LIB_SQLITE3} ${HAVE_LIB_DB} ${HAVE_LIB_SEM} ${HAVE_LIB_PTHREAD}"
+	LIBS="${LIBS} ${HAVE_LIB_MILTER} ${LIBS_SQLITE3} ${HAVE_LIB_DB} ${HAVE_LIB_SEM} ${HAVE_LIB_PTHREAD}"
 else
 	snert_libsnert=no
 	echo
