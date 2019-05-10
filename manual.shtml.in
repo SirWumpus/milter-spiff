@@ -47,8 +47,8 @@ UNDERSTANDS AND ACCEPTS THE RISKS INVOLVED.
 
 <p>
 This <a href="http://www.sendmail.org/">Sendmail</a> mail filter
-is an independent implementation of the <a href="http://spf.pobox.com/">Sender Policy Framework</a>
-version 1 protocol also known as <a href="http://www.ietf.org/internet-drafts/draft-schlitt-spf-classic-02.txt">SPF Classic</a>.
+is an independent implementation of the Sender Policy Framework
+version 1 protocol also known as SPF Classic, now <a href="https://tools.ietf.org/html/rfc4408">RFC 4408</a>.
 This mail filter will accept, tag, reject, and/or discard email according
 to a domain's authorized mail source as published using SPF records.
 </p>
