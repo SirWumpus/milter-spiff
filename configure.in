@@ -12,7 +12,7 @@ dnl The autoconf version I learned to deal with.
 AC_PREREQ(2.59)
 
 dnl Yes I wrote this mess.
-SNERT_INIT(MILTER, [Copyright 2004, 2012 by Anthony Howe. All rights reserved.])
+SNERT_INIT(MILTER, [Copyright 2004, 2019 by Anthony Howe. All rights reserved.])
 
 AC_SUBST(snert_milter_t_equate, 'C:10s;S:10s;R:4m;E:10s')
 
@@ -121,10 +121,6 @@ if test -f '../lib/version.sh' ; then
 		echo
 		exit 1
 	fi
-
-	CFLAGS="${CFLAGS_MILTER} ${CFLAGS_SQLITE3} ${CFLAGS_DB} ${CFLAGS_PTHREAD} ${CFLAGS}"
-	LDFLAGS="${LDFLAGS_MILTER} ${LDFLAGS_SQLITE3} ${LDFLAGS_DB} ${LDFLAGS_PTHREAD} ${LDFLAGS}"
-	LIBS="${LIBS} ${LIBS_MILTER} ${LIBS_SQLITE3} ${HAVE_LIB_DB} ${HAVE_LIB_SEM} ${HAVE_LIB_PTHREAD}"
 else
 	snert_libsnert=no
 	echo
@@ -137,6 +133,8 @@ fi
 #######################################################################
 #	Generate output.
 #######################################################################
+
+SNERT_FINI
 
 echo
 echo "Generating files..."
