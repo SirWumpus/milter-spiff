@@ -2,12 +2,10 @@
 
 ![Spaceman Spiff prepares to frag yet another evil spamzulla](Img/spiff.gif)  
 
-milter-spiff
-============
+milter-spiff  « Sender Permitted If From »
+==========================================
 
 Copyright 2004, 2019 by Anthony Howe.  All rights reserved.
-
-« Sender Permitted If From »
 
 
 WARNING
@@ -113,25 +111,43 @@ For black-white lookups, the following actions are recognised: `OK` or `RELAY` (
 
 Below is a list of supported tags.  Other options may specify additional tags.
 
-        milter-spiff-Connect:client-ip          value         § Can be a pattern list.
-        Connect:client-ip  value
-        client-ip  value
+        milter-spiff-Connect:client-ip          value           § Can be a pattern list.
+        milter-spiff-Connect:[client-ip]        value           § Can be a pattern list.
+        milter-spiff-Connect:client-domain      value           § Can be a pattern list.
+        milter-spiff-Connect:                   value           § Can be a pattern list.
+        Connect:client-ip                       value
+        Connect:[client-ip]                     value
+        Connect:client-domain                   value
 
-        milter-spiff-To:recipient-address       value         § Can be a pattern list.
-        milter-spiff-To:recipient-domain        value         § Can be a pattern list.
-        milter-spiff-To:recipient@              value         § Can be a pattern list.
-        milter-spiff-To:                        value         § Can be a pattern list.
-        Spam:recipient-address                  value         (FRIEND or HATER are recognised)
-        Spam:recipient-domain                   value         (FRIEND or HATER are recognised)
-        Spam:recipient@                         value         (FRIEND or HATER are recognised)
+All mail sent by a connecting _client-ip_, unresolved _client-ip_ address or IP addresses that resolve to a _client-domain_ are black or white-listed.  These allows you to white-list your network for mail sent internally and off-site, or connections from outside networks.  *Note that Sendmail also has special semantics for `Connect:` and untagged forms.*
+
+        milter-spiff-Auth:auth_authen           value           § Can be a pattern list.
+        milter-spiff-Auth:                      value           § Can be a pattern list.
+
+All mail from the authenticated sender, as given by sendmail's `{auth_authen}` macro, is black or white-listed.  The string searched by the pattern list will be the sender-address.  The empty form of `milter-spiff-Auth:` allows for a milter specific default only when `{auth_authen}` is defined.
+
+        milter-spiff-From:sender-address        value           § Can be a pattern list.
+        milter-spiff-From:sender-domain         value           § Can be a pattern list.
+        milter-spiff-From:sender@               value           § Can be a pattern list.
+        milter-spiff-From:                      value           § Can be a pattern list.
+        From:sender-address                     value
+        From:sender-domain                      value
+        From:sender@                            value
+
+All mail from the _sender-address_, _sender-domain_, or that begins with _sender_ is black or white-listed.  In the case of a _+detailed_ email address, the left hand side of the _+detail_ is used for the _sender@_ lookup.  *Note that Sendmail also has special semantics for From: and untagged forms.*
+
+        milter-spiff-To:recipient-address       value           § Can be a pattern list.
+        milter-spiff-To:recipient-domain        value           § Can be a pattern list.
+        milter-spiff-To:recipient@              value           § Can be a pattern list.
+        milter-spiff-To:                        value           § Can be a pattern list.
+        Spam:recipient-address                  value           (FRIEND or HATER are recognised)
+        Spam:recipient-domain                   value           (FRIEND or HATER are recognised)
+        Spam:recipient@                         value           (FRIEND or HATER are recognised)
         To:recipient-address                    value
         To:recipient-domain                     value
         To:recipient@                           value
-        recipient-address                       value
-        recipient-domain                        value
-        recipient@                              value
 
-All mail to the _recipient-address_, _recipient-domain_, or that begins with _recipient_ is black or white-listed.  In the case of a _+detailed_ email address, the left hand side of the _+detail_ is used for the _recipient@_ lookup.  Note that Sendmail also has special semantics for `Spam:`, `To:`, and untagged forms.
+All mail to the _recipient-address_, _recipient-domain_, or that begins with _recipient_ is black or white-listed.  In the case of a _+detailed_ email address, the left hand side of the _+detail_ is used for the _recipient@_ lookup.  *Note that Sendmail also has special semantics for `Spam:`, `To:`, and untagged forms.*
 
 The `milter-spiff-Connect:` and `milter-spiff-To:` tags provide a milter specific means to override the Sendmail variants.  For example, you normally white list your local network through any and all milters, but on the odd occasion you might want to actually scan mail from inside going out, without removing the `Connect:` tag that allows Sendmail to relay for your network or white listing for other milters.  So for example if you have Sendmail tags like:
 
@@ -168,7 +184,7 @@ Normally when the _access.db_ lookup matches a milter tag, then the _value_ patt
 Reject mail to places like _compaq.com_ or _com.com_ if the pattern matches, but resume the _access.db_ lookups otherwise.
 
         milter-spiff-To:aol.com                 /^[a-zA-Z0-9!#$&'*+=?^_`{|}~.-]{3,16}@aol.com$/NEXT REJECT
-        To:fred@aol.com                                 OK
+        To:fred@aol.com                         OK
 
 AOL local parts are between 3 and 16 characters long and can contain dots and RFC 2822 atext characters except `%` and `/`.  The `NEXT` used above allows one simple regex to validate the format of the address and resume lookups of white listed and/or black listed addresses.
 
